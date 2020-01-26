@@ -17,6 +17,10 @@
     "login",
     "jazzy"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JazzBrown1/tezle-id.git"
+  },
   "author": "Jazz Brown",
   "license": "ISC",
   "devDependencies": {
