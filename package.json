@@ -1,0 +1,33 @@
+{
+  "name": "tezle-id",
+  "version": "1.0.0",
+  "description": "Tezle Id authentication middleware for ExpressJs",
+  "main": "dist/index.js",
+  "entry": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Warning: no test specified\"",
+    "build": "rollup --config"
+  },
+  "keywords": [
+    "tezle",
+    "id",
+    "express",
+    "authenticate",
+    "middleware",
+    "login",
+    "jazzy"
+  ],
+  "author": "Jazz Brown",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "rollup": "^1.29.0",
+    "rollup-plugin-auto-external": "^2.0.0"
+  },
+  "dependencies": {
+    "jazzy-authenticate": "^0.1.1",
+    "request": "^2.88.0"
+  }
+}
