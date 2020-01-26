@@ -1,6 +1,6 @@
 {
   "name": "tezle-id",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tezle Id authentication middleware for ExpressJs",
   "main": "dist/index.js",
   "entry": "dist/index.js",
