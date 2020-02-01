@@ -1,5 +1,6 @@
 
-import { authCodeRequest } from './authCodeReq';
+import { authCodeRequest } from './apis/authCodeReq';
+// import { tezleUserApi } from './apis/tezleIdUserApi';
 
 const tezleIdStrategy = {
   getUser: (query, done) => {
@@ -18,6 +19,20 @@ const tezleIdStrategy = {
       return done(null, user);
     });
   },
-  extract: 'query'
+  extract: 'query',
+  selfLogin: true
+  /*
+  // Future proposed jazzy auth method will be called after init or after login or logout
+  // (before on success or next middleware is called).
+  // By attaching the tzl object to the jazzy object we know it will be removed if the user logs out
+  onLoggedStateChange: (req, res, next) => {
+    if (req.jazzy.isLogged && req.user.accessToken) {
+      req.jazzy.tzl = {
+        request: (type, payload, cb) => tezleUserApi(type, req.user.accessToken, payload, cb)
+      };
+    } else req.jazzy.tzl = {};
+    next();
+  }
+  */
 };
 export default tezleIdStrategy;

@@ -1,20 +1,19 @@
 import request from 'request';
+import { credentials } from '../credentials';
 
-const makeRequest = (type, token, cb) => {
+const bearerRequest = (type, payload, token, cb) => {
   request({
-    url: `http://192.168.1.28:3000/api/external/${type}`,
+    url: `${credentials.userEndpoint}/${type}`,
     headers: {
       Authorization: `Bearer ${token}`
     },
-    json: {
-      req: type
-    },
+    json: payload,
     rejectUnauthorized: false
   }, cb);
 };
 
-const tezleRequest = (type, token, cb) => {
-  makeRequest(type, token, (err, res) => {
+const tezleUserApi = (type, payload, token, cb) => {
+  bearerRequest(type, payload, token, (err, res) => {
     if (err) return cb(err, null);
     if (typeof res.body === 'string') return cb(new Error(res.body));
     return cb(err, res ? res.body : null);
@@ -22,4 +21,4 @@ const tezleRequest = (type, token, cb) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export { tezleRequest as request };
+export { tezleUserApi };

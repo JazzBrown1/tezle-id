@@ -1,5 +1,5 @@
 import request from 'request';
-import { credentials } from './credentials';
+import { credentials } from '../credentials';
 
 const authCodeRequest = (code, cb) => {
   request.post({

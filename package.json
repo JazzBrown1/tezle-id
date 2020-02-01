@@ -31,7 +31,10 @@
     "rollup-plugin-auto-external": "^2.0.0"
   },
   "dependencies": {
-    "jazzy-authenticate": "^0.1.1",
+    "jazzy-authenticate": "^0.3.1",
     "request": "^2.88.0"
+  },
+  "peerDependencies": {
+    "express": "4.*"
   }
 }

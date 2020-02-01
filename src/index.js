@@ -1,29 +1,34 @@
-/* eslint-disable consistent-return */
-
 import {
-  setStrategy,
+  define,
   init,
   authenticate,
   checkLogged,
   logout,
   login,
   checkNotLogged,
-  modifyStrategy
+  modify as modifyStrategy
 } from 'jazzy-authenticate';
-import { request } from './tezleIdApi';
 import { setCredentials, credentials } from './credentials';
 import tezleIdStrategy from './tezleIdStrategy';
+import { tezleClientRequest } from './apis/tezleClientApi';
+import { tezleUserApi } from './apis/tezleIdUserApi';
+import { tezleAppRequest } from './apis/tezleAppApi';
 
-setStrategy('tezleId', tezleIdStrategy, true);
+define('tezleId', tezleIdStrategy, true);
 
-const authorizationURL = () => `${credentials.authorizationUrl}?response_type=code&redirect_uri=${credentials.redirectUri}&client_id=${credentials.clientId}`;
+const authorizationURL = () => credentials.authorizationUrl;
 
 const modify = (obj) => modifyStrategy('tezleId', obj);
+
+const request = {
+  app: tezleAppRequest,
+  client: tezleClientRequest,
+  user: tezleUserApi
+};
 
 export {
   request,
   authorizationURL,
-  setStrategy,
   init,
   authenticate,
   checkLogged,
