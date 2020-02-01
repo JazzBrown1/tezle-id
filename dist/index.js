@@ -5,18 +5,25 @@ Object.defineProperty(exports, '__esModule', { value: true });
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var jazzyAuthenticate = require('jazzy-authenticate');
+var qs = _interopDefault(require('querystring'));
 var request$1 = _interopDefault(require('request'));
 
 const credentials = {
   redirectUri: process.env.TZL_REDIRECT_URI || null,
   clientId: process.env.TZL_CLIENT_ID || null,
   clientSecret: process.env.TZL_CLIENT_SECRET || null,
-  authorizationUrl: process.env.TZL_AUTHORIZATION_URL || 'http://192.168.1.28:3000/authorize',
-  tokenUrl: process.env.TZL_TOKEN_URL || 'http://192.168.1.28:3000/oauth/token',
-  userEndpoint: process.env.TZL_USER_ENDPOINT || 'http://192.168.1.28:3000/api/external',
-  clientEndpoint: process.env.TZL_CLIENT_ENDPOINT || 'http://192.168.1.28:3000/api/client',
-  appEndpoint: process.env.TZL_APP_ENDPOINT || 'http://192.168.1.28:3000/api/tezle'
+  authorizationUrl: process.env.TZL_AUTHORIZATION_URL || 'https://192.168.1.28:3000/authorize',
+  tokenUrl: process.env.TZL_TOKEN_URL || 'https://192.168.1.28:3000/oauth/token',
+  userEndpoint: process.env.TZL_USER_ENDPOINT || 'https://192.168.1.28:3000/api/external',
+  clientEndpoint: process.env.TZL_CLIENT_ENDPOINT || 'https://192.168.1.28:3000/api/client',
+  appEndpoint: process.env.TZL_APP_ENDPOINT || 'https://192.168.1.28:3000/api/tezle'
 };
+
+const makeAuthorizationUrl = () => {
+  credentials.authorizationUrl = `${credentials.authorizationUrl}?${qs.stringify({ response_type: 'code', redirect_uri: credentials.redirectUri, client_id: credentials.clientId })}`;
+};
+
+makeAuthorizationUrl();
 
 const setCredentials = (redirectUri, clientId, clientSecret, authorizationUrl, tokenUrl) => {
   credentials.redirectUri = redirectUri;
@@ -24,6 +31,7 @@ const setCredentials = (redirectUri, clientId, clientSecret, authorizationUrl, t
   credentials.clientSecret = clientSecret;
   if (authorizationUrl) credentials.authorizationUrl = authorizationUrl;
   if (tokenUrl) credentials.tokenUrl = tokenUrl;
+  makeAuthorizationUrl();
 };
 
 const authCodeRequest = (code, cb) => {
@@ -95,9 +103,7 @@ const bearerRequest = (type, payload, token, cb) => {
     headers: {
       Authorization: `Bearer ${token}`
     },
-    json: {
-      req: type
-    },
+    json: payload,
     rejectUnauthorized: false
   }, cb);
 };
@@ -125,7 +131,7 @@ const tezleAppRequest = (type, payload, cb) => {
 
 jazzyAuthenticate.define('tezleId', tezleIdStrategy, true);
 
-const authorizationURL = () => `${credentials.authorizationUrl}?response_type=code&redirect_uri=${credentials.redirectUri}&client_id=${credentials.clientId}`;
+const authorizationURL = () => credentials.authorizationUrl;
 
 const modify = (obj) => jazzyAuthenticate.modify('tezleId', obj);
 
