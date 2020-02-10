@@ -8,7 +8,7 @@ const tezleIdStrategy = {
       if (err) return done(err, false);
       if (!res || !res.body) return done(null, false);
       const {
-        access_token: accessToken, userId, client: profile
+        accessToken, userId, client: profile
       } = res.body;
       const user = {
         id: userId,

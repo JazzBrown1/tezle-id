@@ -1,24 +1,23 @@
 import {
-  define,
+  defineModel,
   init,
   authenticate,
-  checkLogged,
+  checkAuthenticated,
   logout,
-  login,
-  checkNotLogged,
-  modify as modifyStrategy
+  checkUnauthenticated,
+  modifyModel
 } from 'jazzy-authenticate';
 import { setCredentials, credentials } from './credentials';
-import tezleIdStrategy from './tezleIdStrategy';
+import tezleIdModel from './tezleIdModel';
 import { tezleClientRequest } from './apis/tezleClientApi';
 import { tezleUserApi } from './apis/tezleIdUserApi';
 import { tezleAppRequest } from './apis/tezleAppApi';
 
-define('tezleId', tezleIdStrategy, true);
+defineModel('tezleId', tezleIdModel, true);
 
 const authorizationURL = () => credentials.authorizationUrl;
 
-const modify = (obj) => modifyStrategy('tezleId', obj);
+const modify = (obj) => modifyModel('tezleId', obj);
 
 const request = {
   app: tezleAppRequest,
@@ -31,11 +30,10 @@ export {
   authorizationURL,
   init,
   authenticate,
-  checkLogged,
+  checkAuthenticated,
   logout,
-  login,
-  checkNotLogged,
+  checkUnauthenticated,
   setCredentials,
   modify,
-  tezleIdStrategy
+  tezleIdModel
 };

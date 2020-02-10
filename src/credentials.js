@@ -6,7 +6,7 @@ const credentials = {
   clientSecret: process.env.TZL_CLIENT_SECRET || null,
   authorizationUrl: process.env.TZL_AUTHORIZATION_URL || 'https://192.168.1.28:3000/authorize',
   tokenUrl: process.env.TZL_TOKEN_URL || 'https://192.168.1.28:3000/oauth/token',
-  userEndpoint: process.env.TZL_USER_ENDPOINT || 'https://192.168.1.28:3000/api/external',
+  userEndpoint: process.env.TZL_USER_ENDPOINT || 'https://192.168.1.28:3000/api/user',
   clientEndpoint: process.env.TZL_CLIENT_ENDPOINT || 'https://192.168.1.28:3000/api/client',
   appEndpoint: process.env.TZL_APP_ENDPOINT || 'https://192.168.1.28:3000/api/tezle'
 };

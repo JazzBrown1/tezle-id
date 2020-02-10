@@ -15,8 +15,13 @@ const bearerRequest = (type, payload, token, cb) => {
 const tezleUserApi = (type, payload, token, cb) => {
   bearerRequest(type, payload, token, (err, res) => {
     if (err) return cb(err, null);
-    if (typeof res.body === 'string') return cb(new Error(res.body));
-    return cb(err, res ? res.body : null);
+    let response = null;
+    try {
+      response = JSON.parse(res.body);
+    } catch (e) {
+      cb('response not in JSON format');
+    }
+    return cb(err, response);
   });
 };
 

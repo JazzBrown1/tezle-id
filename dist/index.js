@@ -14,7 +14,7 @@ const credentials = {
   clientSecret: process.env.TZL_CLIENT_SECRET || null,
   authorizationUrl: process.env.TZL_AUTHORIZATION_URL || 'https://192.168.1.28:3000/authorize',
   tokenUrl: process.env.TZL_TOKEN_URL || 'https://192.168.1.28:3000/oauth/token',
-  userEndpoint: process.env.TZL_USER_ENDPOINT || 'https://192.168.1.28:3000/api/external',
+  userEndpoint: process.env.TZL_USER_ENDPOINT || 'https://192.168.1.28:3000/api/user',
   clientEndpoint: process.env.TZL_CLIENT_ENDPOINT || 'https://192.168.1.28:3000/api/client',
   appEndpoint: process.env.TZL_APP_ENDPOINT || 'https://192.168.1.28:3000/api/tezle'
 };
@@ -56,7 +56,7 @@ const tezleIdStrategy = {
       if (err) return done(err, false);
       if (!res || !res.body) return done(null, false);
       const {
-        access_token: accessToken, userId, client: profile
+        accessToken, userId, client: profile
       } = res.body;
       const user = {
         id: userId,
@@ -111,8 +111,13 @@ const bearerRequest = (type, payload, token, cb) => {
 const tezleUserApi = (type, payload, token, cb) => {
   bearerRequest(type, payload, token, (err, res) => {
     if (err) return cb(err, null);
-    if (typeof res.body === 'string') return cb(new Error(res.body));
-    return cb(err, res ? res.body : null);
+    let response = null;
+    try {
+      response = JSON.parse(res.body);
+    } catch (e) {
+      cb('response not in JSON format');
+    }
+    return cb(err, response);
   });
 };
 
@@ -129,11 +134,11 @@ const tezleAppRequest = (type, payload, cb) => {
   }, (err, res) => cb(err, res && res.body ? res.body : null));
 };
 
-jazzyAuthenticate.define('tezleId', tezleIdStrategy, true);
+jazzyAuthenticate.defineModel('tezleId', tezleIdStrategy, true);
 
 const authorizationURL = () => credentials.authorizationUrl;
 
-const modify = (obj) => jazzyAuthenticate.modify('tezleId', obj);
+const modify = (obj) => jazzyAuthenticate.modifyModel('tezleId', obj);
 
 const request = {
   app: tezleAppRequest,
@@ -147,28 +152,22 @@ Object.defineProperty(exports, 'authenticate', {
     return jazzyAuthenticate.authenticate;
   }
 });
-Object.defineProperty(exports, 'checkLogged', {
+Object.defineProperty(exports, 'checkAuthenticated', {
   enumerable: true,
   get: function () {
-    return jazzyAuthenticate.checkLogged;
+    return jazzyAuthenticate.checkAuthenticated;
   }
 });
-Object.defineProperty(exports, 'checkNotLogged', {
+Object.defineProperty(exports, 'checkUnauthenticated', {
   enumerable: true,
   get: function () {
-    return jazzyAuthenticate.checkNotLogged;
+    return jazzyAuthenticate.checkUnauthenticated;
   }
 });
 Object.defineProperty(exports, 'init', {
   enumerable: true,
   get: function () {
     return jazzyAuthenticate.init;
-  }
-});
-Object.defineProperty(exports, 'login', {
-  enumerable: true,
-  get: function () {
-    return jazzyAuthenticate.login;
   }
 });
 Object.defineProperty(exports, 'logout', {
@@ -181,4 +180,4 @@ exports.authorizationURL = authorizationURL;
 exports.modify = modify;
 exports.request = request;
 exports.setCredentials = setCredentials;
-exports.tezleIdStrategy = tezleIdStrategy;
+exports.tezleIdModel = tezleIdStrategy;
